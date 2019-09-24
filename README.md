@@ -11,3 +11,15 @@ With the limited number of data, the idea is to use a pretrained model for face 
 ## 3. Models 
 
 ## 4. Tuning
+
+## TODO
+	- find pretrained model OK
+	- data augmentation OK
+	- data split OK
+	- face alignment OK => Need to improve. MTCNN doenst work very well 
+	- extract embedding vectors
+	- pseudo training
+	- pseudo voting
+	- find threshold
+	- unknown class
+	
