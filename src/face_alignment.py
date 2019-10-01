@@ -104,8 +104,10 @@ if __name__ == '__main__':
 				io.imsave('../data/train_112x112/'+labels['image'][i], new_face_112x112)
 				io.imsave('../data/train_160x160/'+labels['image'][i], new_face_160x160)
 			else:
+				print("Cannot detect !")
 				io.imsave('../data/train_unknown/'+labels['image'][i], img)
 		else:
+			print("Cannot detect !")
 			io.imsave('../data/train_unknown/'+labels['image'][i], img)
 
 	print("Face alignment completed !")
