@@ -8,6 +8,7 @@ import time
 from matplotlib import pyplot as plt
 import sys
 from face_detector import SSHDetector
+import os
 sys.path.append("../backbones/mtcnn")
 from mtcnn_detector import MtcnnDetector
 
@@ -69,6 +70,16 @@ def get_scales(img):
     return scales
 
 if __name__ == '__main__':
+	#delete file in train repo
+	listfile = os.listdir('../data/train_112x112')
+	if len(listfile) > 0:
+		os.system('rm ../data/train_112x112/*')
+	listfile = os.listdir('../data/train_160x160')
+	if len(listfile) > 0:
+		os.system('rm ../data/train_160x160/*')
+	listfile = os.listdir('../data/train_160x160')
+	if len(listfile) > 0:
+		os.system('rm ../data/train_unknown/*')
 
 	print("Start Face Alignment\n")
 	labels = pd.read_csv('../data/train.csv')
@@ -76,43 +87,27 @@ if __name__ == '__main__':
 	print(labels.shape)
 	face_detector = SSHDetector(prefix = "../models/ssh/sshb", ctx_id= -1, epoch = 0, test_mode = True)
 	landmark_detector = MtcnnDetector(model_folder = "../backbones/mtcnn/model")
-
+		
 	for i in range(labels.shape[0]):
+		print("Image : {} ----- File : {} ------\n".format(i+1, labels['image'][i]))
 		img = io.imread('../data/train/' + labels['image'][i])
 		scales = get_scales(img)
 		results = face_detector.detect(img, scales = scales, threshold = 0.2)
-		landmarks = landmark_detector.get_landmark(img, results)
-		if landmarks != None:
-			_, points = landmarks
-			points_array = points[0,:].reshape((2,5)).T
-			new_face_112x112 = face_alignment(img, 112, landmark = points_array, bbox = results[0])
-			new_face_160x160 = face_alignment(img, 160, landmark = points_array, bbox = results[0])
-			
-			io.imsave('../data/train_112x112/'+labels['image'][i], new_face_112x112)
-			io.imsave('../data/train_160x160/'+labels['image'][i], new_face_160x160)
+		if len(results) != 0:
+			landmarks = landmark_detector.get_landmark(img, results)
+			if landmarks != None:
+				_, points = landmarks
+				points_array = points[0,:].reshape((2,5)).T
+				new_face_112x112 = face_alignment(img, 112, landmark = points_array, bbox = results[0])
+				new_face_160x160 = face_alignment(img, 160, landmark = points_array, bbox = results[0])
+				
+				io.imsave('../data/train_112x112/'+labels['image'][i], new_face_112x112)
+				io.imsave('../data/train_160x160/'+labels['image'][i], new_face_160x160)
+			else:
+				io.imsave('../data/train_unknown/'+labels['image'][i], img)
 		else:
 			io.imsave('../data/train_unknown/'+labels['image'][i], img)
 
-		"""
-		if len(result) == 0:
-			io.imsave('../data/train_unknown/'+labels['image'][i], img)
-			continue
-
-		keypoints = result[0]["keypoints"]
-		landmark = np.zeros((5,2))
-		keys = ['left_eye', 'right_eye', 'nose', 'mouth_left', 'mouth_right']
-
-		for j in range(landmark.shape[0]):
-			landmark[j,:] = keypoints[keys[j]]
-		#size = 112x112
-		new_face_112x112 = face_aligment(img, 112, landmark = landmark, bbox = result[0]["box"])
-		#size = 160x160
-		new_face_160x160 = face_aligment(img, 160, landmark = landmark, bbox = result[0]["box"])
-
-		io.imsave('../data/train_112x112/'+labels['image'][i], new_face_112x112)
-		io.imsave('../data/train_160x160/'+labels['image'][i], new_face_160x160)
-		"""
-		
 	print("Face alignment completed !")
 
 

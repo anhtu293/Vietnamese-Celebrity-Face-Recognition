@@ -92,7 +92,7 @@ class SSHDetector:
                     idx = 2
                 elif s == 8:
                     idx = 4
-                print('getting', im_scale, stride, idx, len(net_out), data.shape, file=sys.stderr)
+                #print('getting', im_scale, stride, idx, len(net_out), data.shape, file=sys.stderr)
                 scores = net_out[idx].asnumpy()
                 # print(scores.shape)
                 idx += 1

@@ -21,4 +21,8 @@ def prewhiten(x):
 	return y
 
 if __name__ = '__main__':
-	
+	with tf.Graph().as_default():
+		with tf.Session() as sess:
+			#load model
+			facenet.load_model(args.model)
+			
