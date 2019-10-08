@@ -77,7 +77,7 @@ if __name__ == '__main__':
 	listfile = os.listdir('../data/train_160x160')
 	if len(listfile) > 0:
 		os.system('rm ../data/train_160x160/*')
-	listfile = os.listdir('../data/train_160x160')
+	listfile = os.listdir('../data/train_unknown')
 	if len(listfile) > 0:
 		os.system('rm ../data/train_unknown/*')
 
