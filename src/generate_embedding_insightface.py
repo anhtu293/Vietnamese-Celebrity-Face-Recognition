@@ -5,6 +5,7 @@ import numpy as np
 sys.path.append("../backbones/insightface/deploy")
 import face_model
 import pandas as pd
+import os
 import csv
 
 parser = argparse.ArgumentParser(description='face model test')
@@ -25,19 +26,25 @@ if __name__ == '__main__':
     img_file = []
     output_dir = './embeddings/insightface/{}/{}'.format(data_path.split("/")[2], args.model.split("/")[3])
     labels = pd.read_csv("../data/train.csv")
+    print(labels.head())
 
-    for i in len(labels):
-        img = cv2.imread(labels["image"][i])
-        img = cv2.cvtColor(cv2.COLOR_BGR2RGB)
+    for i in range(len(labels)):
+        img_path = data_path + "/" + labels["image"][i]
+        if not os.path.exists(img_path):
+            continue
+        img = cv2.imread(img_path)
+        print("{}/{} : {}".format(i, len(labels), img_path))
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         embeddings = model.get_feature(img)
         np.save(output_dir + '%s.npy'%labels["image"][i][:-4], embeddings)
-        img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['class'][i]])
+        img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['label'][i]])
 
         img_flip = cv2.flip(img, 1)
         embeddings = model.get_feature(img_flip)
         np.save(output_dir + '%s_flip.npy'%labels["image"][i][:-4], embeddings)
-        img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['class'][i]])
+        img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['label'][i]])
     
-    with open("./embedding/insightface/embs_class_{}_{}.csv".format(data_path[8:], args.model.split("/")[3]), 'a') as file:
+    with open("./embeddings/insightface/embs_class_{}_{}.csv".format(data_path[8:], args.model.split("/")[3]), 'a') as file:
         writer = csv.writer(file)
         writer.writerows(img_file)

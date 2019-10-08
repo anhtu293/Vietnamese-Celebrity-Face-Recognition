@@ -36,6 +36,11 @@ MTCNN
 
 [ ] extract embedding vectors
 
+python3 generate_embedding_facenet.py --model ../model/facenet/20180402-114759
+python3 generate_embedding_facenet.py --model ../model/facenet/20180408-102900
+python3 generate_embedding_insightface.py --model ../models/insightface/model-r50-am-lfw/model,0
+python3 generate_embedding_insightface.py --model ../models/insightface/model-r100-ii/model,0
+
 [ ] pseudo training
 
 [ ] pseudo voting
