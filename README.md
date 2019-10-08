@@ -17,18 +17,28 @@ After face detection, the faces detected by the Mxnet detector were passed MTCNN
 Finally, I used 2 architectures with 3 models to calculate embedding vectors : insight and facenet. To create submission, the pseudo voting was used.
 ## 3. Models 
 Insight
+
 Facenet
+
 Mxnet
+
 MTCNN
 ## 4. Tuning
 
 ## TODO
 [x] find pretrained model OK
+
 [x] data augmentation OK
+
 [x] data split OK
+
 [x] face alignment OK => Need to improve. MTCNN doenst work very well. Try MXnet SSH instead of MTCNN, fix bug in mtcnn_detector get_landmark. ref : https://stackoverflow.com/questions/54453957/not-able-to-process-some-images-for-face-detection-using-mtcnn-mehtod-implement
+
 [ ] extract embedding vectors
+
 [ ] pseudo training
+
 [ ] pseudo voting
+
 [ ] find threshold for unknown class
 	
