@@ -12,9 +12,9 @@ import numpy as np
 
 
 parser = argparse.ArgumentParser(description = 'facenet')
-parser.add_argument("--data", default = '../data/train_112x112', help = 'path to dataset')
-parser.add_argument("--model", default = '', help = 'path to load pretrained model')
-parser.add_argument('--image_size', type = int, help = 'Image size (h,w) to input model', default = 112)
+parser.add_argument("--data", default = '../data/train_160x160', help = 'path to dataset')
+parser.add_argument("--model", default = '../models/facenet/20180402-114759', help = 'path to load pretrained model')
+parser.add_argument('--image_size', type = int, help = 'Image size (h,w) to input model', default = 160)
 args = parser.parse_args()
 
 print(args.model)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 			
 			img_file = []
 
-			output_dir = './embeddings/facenet/{}'.format(args.data.split("/")[-1])
+			output_dir = './embeddings/facenet/{}/{}'.format(args.data.split("/")[2], args.model.split("/")[3])
 			labels = pd.read_csv("../data/train.csv")
 
 			for i in len(labels):
@@ -50,21 +50,21 @@ if __name__ == '__main__':
 				img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 				
 				img = standarize_img(img)
-				img = np.expand(img, axis = 0)
+				img = np.expand_dims(img, axis = 0)
 				feed_dict = {img_placeholder : img, phase_train_placeholder : False}
 				embed = sess.run(embeddings, feed_dict = feed_dict)
 				np.save(output_dir + '/%s.npy'%labels["image"][i][:-4], embed)
-				img_file.append(['/%s.npy'%labels["image"][i][:-4], labels['class'][i]])
+				img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['class'][i]])
 
 				img_flip = cv2.flip(img, 1)
 				img_flip = standarize_img(img_flip)
-				img_flip = np.expand(img_flip, axis = 0)
+				img_flip = np.expand_dims(img_flip, axis = 0)
 				feed_dict = {img_placeholder : img_flip, phase_train_placeholder : False}
 				embed = sess.run(embeddings, feed_dict = feed_dict)
 
 				np.save(output_dir + '/%s_flip.npy'%labels["image"][i][:-4], embed)
-				img_file.append([labels["image"][i][:-4] + "_flip.npy", labels['class'][i]])
+				img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['class'][i]])
 
-			with open("./embedding/facenet/embs_class_{}.csv".format(args.data[8:]), 'a') as file:
+			with open("./embedding/facenet/embs_class_{}_{}.csv".format(args.data[8:], args.model.split("/")[3]), 'a') as file:
 				writer = csv.writer(file)
 				writer.writerows(img_file)
