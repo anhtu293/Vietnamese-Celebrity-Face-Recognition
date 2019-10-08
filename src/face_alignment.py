@@ -88,7 +88,7 @@ if __name__ == '__main__':
 	face_detector = SSHDetector(prefix = "../models/ssh/sshb", ctx_id= -1, epoch = 0, test_mode = True)
 	landmark_detector = MtcnnDetector(model_folder = "../backbones/mtcnn/model")
 	
-	train = pd.DataFrame(columns = ["image", "class"])
+	#train = pd.DataFrame(columns = ["image", "class"])
 	
 	for i in range(labels.shape[0]):
 		print("Image : {} ----- File : {} ------\n".format(i+1, labels['image'][i]))
@@ -105,14 +105,14 @@ if __name__ == '__main__':
 				
 				io.imsave('../data/train_112x112/'+labels['image'][i], new_face_112x112)
 				io.imsave('../data/train_160x160/'+labels['image'][i], new_face_160x160)
-				train.append(labels[i])
+				#train.append(labels[i])
 			else:
 				print("Cannot detect !")
 				io.imsave('../data/train_unknown/'+labels['image'][i], img)
 		else:
 			print("Cannot detect !")
 			io.imsave('../data/train_unknown/'+labels['image'][i], img)
-	train.to_csv("../data/train_embedding.csv")
+	#train.to_csv("../data/train_embedding.csv")
 	print("Face alignment completed !")
 
 
