@@ -19,13 +19,15 @@ parser.add_argument('--flip', default=0, type=int, help='whether do lr flip aug'
 parser.add_argument('--threshold', default=1.24, type=float, help='ver dist threshold')
 args = parser.parse_args()
 
-data_path  = '../data/train_112x112'
+data_path  = '../data/test_112x112'
+file_path = "../data/test.csv"
+mode = "test"
 
 if __name__ == '__main__':
     model = face_model.FaceModel(args)
     img_file = []
     output_dir = './embeddings/insight/{}/{}'.format(data_path.split("/")[2], args.model.split("/")[3])
-    labels = pd.read_csv("../data/train.csv")
+    labels = pd.read_csv(file_path)
     print(labels.head())
 
     for i in range(len(labels)):
@@ -39,13 +41,19 @@ if __name__ == '__main__':
         img = np.transpose(img_origin, (2,0,1))
         embeddings = model.get_feature(img)
         np.save(output_dir + '/%s.npy'%labels["image"][i][:-4], embeddings)
-        img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['label'][i]])
+        if mode == 'train':
+            img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['label'][i]])
+        else:
+            img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4]])
 
         img_flip = cv2.flip(img_origin, 1)
         img_flip = np.transpose(img_flip, (2,0,1))
         embeddings = model.get_feature(img_flip)
         np.save(output_dir + '/%s_flip.npy'%labels["image"][i][:-4], embeddings)
-        img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['label'][i]])
+        if mode == 'train':
+            img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['label'][i]])
+        else:
+            img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy"])
     
     with open("./embeddings/insight/embs_class_{}_{}.csv".format(data_path[8:], args.model.split("/")[3]), 'a') as file:
         writer = csv.writer(file)

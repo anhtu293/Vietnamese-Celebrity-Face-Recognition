@@ -1,1 +1,6 @@
 models/
+./src/results/facenet_model_20180402-114759_160.h5.csv
+./src/results/facenet_model_20180408-102900_160.h5.csv
+./src/results/insight_model_model-r50-am-lfw_112.h5.csv
+./src/results/insight_model_model-r100-ii_112.h5.csv
+./src/embeddings

@@ -16,34 +16,57 @@ After face detection, the faces detected by the Mxnet detector were passed MTCNN
 
 Finally, I used 2 architectures with 3 models to calculate embedding vectors : insight and facenet. To create submission, the pseudo voting was used.
 ## 3. Models 
-Insight
+For face detection, I've tried MTCNN but this model didn't work really well on this dataset. So I used mxnet and I got very remarkable results : only 2 faces in training set can not be detected and 60 in test set. 
 
-Facenet
+I used facenet model (https://github.com/davidsandberg/facenet) with 2 pretrained models and insightface (https://github.com/deepinsight/insightface) with 2 pretrained models to create embedding vectors. 
 
-Mxnet
+Finally, I build a neural network with 2 hidden layers to train on embedding vectors. I had 4 models trained from 4 set of embedding vectors (2 for facenet and 2 for insightface). I used 4 models to classify test set, then I did pseudo labeling with equal weights for 4 models to get final predicts. 
 
-MTCNN
-## 4. Tuning
 
-## TODO
-[x] find pretrained model OK
+## 4. Procedure :
 
-[x] data augmentation OK
+### 1. Face detection and face alignment:
+    """
+        python3 ./src/face_alignment_test.py 
+        python3 ./src/face_alignment_train.py
+    """
 
-[x] data split OK
+### 2. Generate embedding vectors : 
+    """
+        python3 ./src/generate_embedding_facenet.py --model ../models/facenet/20180402-114759 
+        python3 ./src/generate_embedding_facenet.py --model ../models/facenet/20180408-102900
+        python3 generate_embedding_insightface.py --model ../models/insightface/model-r50-am-lfw/model,0
+        python3 generate_embedding_insightface.py --model ../models/insightface/model-r100-ii/model,0
+    """
 
-[x] face alignment OK => Need to improve. MTCNN doenst work very well. Try MXnet SSH instead of MTCNN, fix bug in mtcnn_detector get_landmark. ref : https://stackoverflow.com/questions/54453957/not-able-to-process-some-images-for-face-detection-using-mtcnn-mehtod-implement
+### 3. Train :
+    """
+        python3 ./train_classifier_facenet.py --model 20180402-114759 --embeddings ./embeddings/facenet/embs_class_train_160x160_20180402-114759.csv
+        python3 ./train_classifier_facenet.py --model 20180408-102900 --embeddings ./embeddings/facenet/embs_class_train_160x160_20180408-102900.csv
+        python3 ./train_classifier_insightface.py --model model-r50-am-lfw --embeddings ./embeddings/insight/embs_class_train_112x112_model-r50-am-lfw.csv
+        python3 ./train_classifier_insightface.py --model model-r100-ii --embeddings ./embeddings/insight/embs_class_train_112x112_model-r100-ii.csv
+    """
 
-[ ] extract embedding vectors
+### 4. Predict : 
+    """
+        python3 generate_prediction.py --model ./models/insight/model_model-r100-ii_112.h5 --embeddings ./embeddings/insight/embs_class_test_112x112_model-r100-ii.csv
+        python3 generate_prediction.py --model ./models/insight/model_model-r50-am-lfw_112.h5 --embeddings ./embeddings/insight/embs_class_test_112x112_model-r50-am-lfw.csv
+        python3 generate_prediction.py --model ./models/facenet/model_20180408-102900_160.h5 --embeddings ./embeddings/facenet/embs_class_test_160x160_20180408-102900.csv
+        python3 generate_prediction.py --model ./models/facenet/model_20180402-102900_160.h5 --embeddings ./embeddings/facenet/embs_class_test_160x160_20180402-102900.csv
+    """
 
-python3 generate_embedding_facenet.py --model ../model/facenet/20180402-114759
-python3 generate_embedding_facenet.py --model ../model/facenet/20180408-102900
-python3 generate_embedding_insightface.py --model ../models/insightface/model-r50-am-lfw/model,0
-python3 generate_embedding_insightface.py --model ../models/insightface/model-r100-ii/model,0
+### 5. Pseudo labeling:
+    """
+        python3 predict.py
+    """
 
-[ ] pseudo training
+## 5. References : 
+Facenet : https://github.com/davidsandberg/facenet
 
-[ ] pseudo voting
+Insightface : https://github.com/deepinsight/insightface
 
-[ ] find threshold for unknown class
-	
+MTCNN : https://github.com/ipazc/mtcnn
+
+1st place of the competition : https://bitbucket.org/dungnb1333/dnb-facerecognition-aivivn/src/master/
+
+3rd place of the competition : https://github.com/vipcualo/AIVIVN2

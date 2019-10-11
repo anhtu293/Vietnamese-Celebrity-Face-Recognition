@@ -12,9 +12,11 @@ import numpy as np
 
 
 parser = argparse.ArgumentParser(description = 'facenet')
+parser.add_argument("--pathfile", default = "../data/train.csv", help = 'path to file synthes embedddings')
 parser.add_argument("--data", default = '../data/train_160x160', help = 'path to dataset')
 parser.add_argument("--model", default = '../models/facenet/20180402-114759', help = 'path to load pretrained model')
 parser.add_argument('--image_size', type = int, help = 'Image size (h,w) to input model', default = 160)
+parser.add_argument('--mode', default = 'train')
 args = parser.parse_args()
 
 print(args.model)
@@ -39,7 +41,7 @@ if __name__ == '__main__':
 			img_file = []
 
 			output_dir = './embeddings/facenet/{}/{}'.format(args.data.split("/")[2], args.model.split("/")[3])
-			labels = pd.read_csv("../data/train.csv")
+			labels = pd.read_csv(args.pathfile)
 			print(labels.head())
 
 			for i in range(len(labels)):
@@ -55,7 +57,10 @@ if __name__ == '__main__':
 				feed_dict = {img_placeholder : img, phase_train_placeholder : False}
 				embed = sess.run(embeddings, feed_dict = feed_dict)
 				np.save(output_dir + '/%s.npy'%labels["image"][i][:-4], embed)
-				img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['label'][i]])
+				if args.mode == 'train':
+					img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4], labels['label'][i]])
+				else:
+					img_file.append([output_dir + '/%s.npy'%labels["image"][i][:-4]])
 
 				img_flip = cv2.flip(img_origin, 1)
 				img_flip = standarize_img(img_flip)
@@ -64,7 +69,10 @@ if __name__ == '__main__':
 				embed = sess.run(embeddings, feed_dict = feed_dict)
 
 				np.save(output_dir + '/%s_flip.npy'%labels["image"][i][:-4], embed)
-				img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['label'][i]])
+				if args.mode == 'train':
+					img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy", labels['label'][i]])
+				else:
+					img_file.append([output_dir + "/" + labels["image"][i][:-4] + "_flip.npy"])
 
 			with open("./embeddings/facenet/embs_class_{}_{}.csv".format(args.data.split("/")[2], args.model.split("/")[3]), 'a') as file:
 				writer = csv.writer(file)

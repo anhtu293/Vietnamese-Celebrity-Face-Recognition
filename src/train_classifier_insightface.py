@@ -14,7 +14,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description = "train classifier of insight model")
 
-parser.add_argument("--model", default = "20180402-114759", help = "model name")
+parser.add_argument("--model", default = "model-r50-am-flw", help = "model name")
 parser.add_argument("--embeddings", default = "./embeddings/insight/embs_class_train_112x112_model-r50-am-lfw.csv", help = "path to file index embeddings for train")
 parser.add_argument("--size", default = 112, help = 'image size')
 args = parser.parse_args()
