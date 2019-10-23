@@ -63,9 +63,9 @@ Finally, I build a neural network with 2 hidden layers to train on embedding vec
 ## 5. References : 
 Facenet : https://github.com/davidsandberg/facenet
 
-Insightface : https://github.com/deepinsight/insightface
+Insightface : https://arxiv.org/abs/1801.07698
 
-MTCNN : https://github.com/ipazc/mtcnn
+MTCNN : https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf
 
 1st place of the competition : https://bitbucket.org/dungnb1333/dnb-facerecognition-aivivn/src/master/
 

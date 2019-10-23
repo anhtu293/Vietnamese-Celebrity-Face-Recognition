@@ -12,7 +12,7 @@ from helper import nms, adjust_input, generate_bbox, detect_first_stage_warpper
 class MtcnnDetector(object):
     """
         Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Neural Networks
-        see https://github.com/kpzhang93/MTCNN_face_detection_alignment
+        
         this is a mxnet version
     """
     def __init__(self,

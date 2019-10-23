@@ -2,7 +2,7 @@ import argparse
 import cv2
 import sys
 import numpy as np
-sys.path.append("../backbones/insightface/deploy")
+sys.path.append("../backbones/insightface/")
 import face_model
 import pandas as pd
 import os
