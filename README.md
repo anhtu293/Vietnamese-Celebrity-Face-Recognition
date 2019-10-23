@@ -1,4 +1,4 @@
-# Vietnamese celebrities face recognition contest on www.aivivn.com
+# Vietnamese celebrities face recognition 
 
 ## 1. Data analysis
 
@@ -69,4 +69,3 @@ MTCNN : https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf
 
 1st place of the competition : https://bitbucket.org/dungnb1333/dnb-facerecognition-aivivn/src/master/
 
-3rd place of the competition : https://github.com/vipcualo/AIVIVN2
