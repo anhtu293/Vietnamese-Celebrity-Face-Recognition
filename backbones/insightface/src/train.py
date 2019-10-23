@@ -693,7 +693,6 @@ def train_net(args):
     print('num_classes', args.num_classes)
     args.coco_scale = 0.5*math.log(float(args.num_classes-1))+3
 
-    #path_imglist = "/raid5data/dplearn/MS-Celeb-Aligned/lst2"
     path_imgrec = os.path.join(data_dir, "train.rec")
     val_rec = os.path.join(data_dir, "val.rec")
     if os.path.exists(val_rec) and args.loss_type<10:
@@ -724,9 +723,6 @@ def train_net(args):
 
     data_shape = (args.image_channel,image_size[0],image_size[1])
     mean = None
-
-
-
 
     begin_epoch = 0
     base_lr = args.lr

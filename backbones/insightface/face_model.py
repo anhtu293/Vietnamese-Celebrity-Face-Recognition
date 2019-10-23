@@ -92,17 +92,5 @@ class FaceModel:
     embedding = sklearn.preprocessing.normalize(embedding).flatten()
     return embedding
 
-  def get_ga(self, aligned):
-    input_blob = np.expand_dims(aligned, axis=0)
-    data = mx.nd.array(input_blob)
-    db = mx.io.DataBatch(data=(data,))
-    self.ga_model.forward(db, is_train=False)
-    ret = self.ga_model.get_outputs()[0].asnumpy()
-    g = ret[:,0:2].flatten()
-    gender = np.argmax(g)
-    a = ret[:,2:202].reshape( (100,2) )
-    a = np.argmax(a, axis=1)
-    age = int(sum(a))
 
-    return gender, age
 
