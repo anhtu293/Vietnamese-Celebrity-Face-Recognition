@@ -1,4 +1,7 @@
-# Vietnamese celebrities face recognition 
+# Vietnamese celebrities face recognition - Competition on aivivn.com
+
+link of the competition : https://www.aivivn.com/contests/7
+data : https://drive.google.com/file/d/1kpxjaz3pIMrAhEjm7hJxcBsxKNhfl8t2/view
 
 ## 1. Data analysis
 
@@ -55,13 +58,15 @@ Finally, I build a neural network with 2 hidden layers to train on embedding vec
         python3 generate_prediction.py --model ./models/facenet/model_20180402-102900_160.h5 --embeddings ./embeddings/facenet/embs_class_test_160x160_20180402-102900.csv
     """
 
-### 5. Pseudo labeling:
+### 5. Label:
     """
         python3 predict.py
     """
 
 ## 5. References : 
 Facenet : https://github.com/davidsandberg/facenet
+
+SSH detector : https://arxiv.org/abs/1708.03979
 
 Insightface : https://arxiv.org/abs/1801.07698
 
